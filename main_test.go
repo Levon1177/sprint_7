@@ -9,6 +9,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestCafeWhenOk(t *testing.T) {
+	handler := http.HandlerFunc(mainHandle)
+
+	requests := []string{
+		"/cafe?count=2&city=moscow",
+		"/cafe?city=tula",
+		"/cafe?city=moscow&search=ложка",
+	}
+	for _, v := range requests {
+		response := httptest.NewRecorder()
+		req := httptest.NewRequest("GET", v, nil)
+
+		handler.ServeHTTP(response, req)
+
+		assert.Equal(t, http.StatusOK, response.Code)
+	}
+}
+
 func TestCafeNegative(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 
@@ -31,20 +49,6 @@ func TestCafeNegative(t *testing.T) {
 	}
 }
 
-func TestCafeWhenOk(t *testing.T) {
-	handler := http.HandlerFunc(mainHandle)
+func TestCafeCount(t *testing.T) {
 
-	requests := []string{
-		"/cafe?count=2&city=moscow",
-		"/cafe?city=tula",
-		"/cafe?city=moscow&search=ложка",
-	}
-	for _, v := range requests {
-		response := httptest.NewRecorder()
-		req := httptest.NewRequest("GET", v, nil)
-
-		handler.ServeHTTP(response, req)
-
-		assert.Equal(t, http.StatusOK, response.Code)
-	}
 }
